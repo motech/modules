@@ -22,6 +22,7 @@ import java.util.Objects;
  */
 public class Observation {
     private static final String DISPLAY_KEY = "display";
+    private static final String UUID_KEY = "uuid";
 
     private String uuid;
     private String display;
@@ -239,10 +240,24 @@ public class Observation {
      * Represents a single value of the observation.
      */
     public static class ObservationValue {
+        private String uuid;
         private String display;
 
         public ObservationValue(String display) {
+            this(null, display);
+        }
+
+        public ObservationValue(String uuid, String display) {
+            this.uuid = uuid;
             this.display = display;
+        }
+
+        public String getUuid() {
+            return this.uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
         }
 
         public String getDisplay() {
@@ -255,7 +270,7 @@ public class Observation {
 
         @Override
         public int hashCode() {
-            return Objects.hash(display);
+            return Objects.hash(uuid, display);
         }
 
         @Override
@@ -270,7 +285,7 @@ public class Observation {
 
             ObservationValue other = (ObservationValue) o;
 
-            return Objects.equals(display, other.display);
+            return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display);
         }
     }
 
@@ -298,6 +313,7 @@ public class Observation {
             if (json.isJsonObject()) {
                 JsonObject jsonObject = json.getAsJsonObject();
                 observationValue.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+                observationValue.setUuid(jsonObject.get(UUID_KEY).getAsString());
             } else if (json.isJsonPrimitive()) {
                 JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive();
                 observationValue.setDisplay(jsonPrimitive.getAsString());
