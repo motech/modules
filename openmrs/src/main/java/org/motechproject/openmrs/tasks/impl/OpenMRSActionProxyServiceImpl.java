@@ -165,7 +165,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+    public Observation createOrUpdateObservationJSON(String configName, String observationUuid, String observationJSON, String encounterUuid, String conceptUuid,
                                              DateTime obsDatetime, String orderUuid, String comment) {
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(observationJSON).getAsJsonObject();
@@ -187,7 +187,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             obj.addProperty("comment", comment);
         }
 
-        return observationService.createObservationFromJson(configName, obj.toString());
+        return observationService.createOrUpdateObservationFromJson(configName, observationUuid, obj.toString());
     }
 
     @Override

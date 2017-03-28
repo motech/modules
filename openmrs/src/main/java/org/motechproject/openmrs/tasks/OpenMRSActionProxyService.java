@@ -97,6 +97,7 @@ public interface OpenMRSActionProxyService {
      * params are optional and will overwrite any matching key of {@code observationJSON}. Configuration with
      * the given {@code configName} will be used while performing this action.
      *  @param configName      the name of the configuration
+     * @param observationJSON the observation uuid
      * @param observationJSON the observation in JSON
      * @param encounterUuid   the encounter uuid
      * @param conceptUuid     the concept uuid
@@ -105,7 +106,7 @@ public interface OpenMRSActionProxyService {
      * @param comment         the comment
      * @return the created observation
      */
-    Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+    Observation createOrUpdateObservationJSON(String configName, String observationUuid, String observationJSON, String encounterUuid, String conceptUuid,
                                       DateTime obsDatetime, String orderUuid, String comment);
 
     /**

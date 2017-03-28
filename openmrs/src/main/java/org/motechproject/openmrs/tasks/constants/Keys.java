@@ -49,6 +49,7 @@ public final class Keys {
 
     //Observation action
     public static final String OBSERVATION_JSON = "observationJSON";
+    public static final String OBSERVATION_UUID = "observationUuid";
     public static final String ENCOUNTER_UUID = "encounterUuid";
     public static final String CONCEPT_UUID = "conceptUuid";
     public static final String OBSERVATION_DATETIME = "obsDatetime";

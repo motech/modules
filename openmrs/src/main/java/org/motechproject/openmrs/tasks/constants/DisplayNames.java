@@ -54,6 +54,7 @@ public final class DisplayNames {
 
     //Observation json
     public static final String OBSERVATION_JSON = "openMRS.observationJSON";
+    public static final String OBSERVATION_UUID = "openMRS.observation.uuid";
     public static final String CONCEPT_UUID = "openMRS.concept.uuid";
     public static final String OBSERVATION_DATETIME = "openMRS.obsDatetime";
     public static final String COMMENT = "openMRS.comment";
