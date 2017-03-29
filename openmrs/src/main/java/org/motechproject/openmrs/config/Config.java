@@ -142,7 +142,11 @@ public class Config {
     }
 
     public FeedConfig getFeedConfig() {
-        return this.feedConfig;
+        FeedConfig result = new FeedConfig();
+        if (null != this.feedConfig) {
+            result = this.feedConfig;
+        }
+        return result;
     }
 
     public String getAtomFeedUrl(Map.Entry<String, String> feed) {
