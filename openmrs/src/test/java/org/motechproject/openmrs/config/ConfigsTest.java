@@ -48,6 +48,7 @@ public class ConfigsTest {
         config.setUsername("otherUsername");
         config.setPassword("otherPassword");
         config.setMotechPatientIdentifierTypeName("otherMotechId");
+        config.setFeedConfig(new FeedConfig());
         configs.update(config);
 
         Configs expectedConfigs = prepareConfigs(SUFFIX_ONE, SUFFIX_TWO, SUFFIX_THREE);
