@@ -166,13 +166,14 @@ public class Config {
         return ObjectUtils.equals(name, other.name) && ObjectUtils.equals(openMrsUrl, other.openMrsUrl)
                 && ObjectUtils.equals(username, other.username) && ObjectUtils.equals(password, other.password)
                 && ObjectUtils.equals(motechPatientIdentifierTypeName, other.motechPatientIdentifierTypeName)
-                && ObjectUtils.equals(patientIdentifierTypeNames, other.patientIdentifierTypeNames);
+                && ObjectUtils.equals(patientIdentifierTypeNames, other.patientIdentifierTypeNames)
+                && ObjectUtils.equals(feedConfig, other.feedConfig);
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(name).append(openMrsUrl).append(username).append(password)
-                .append(motechPatientIdentifierTypeName).append(patientIdentifierTypeNames).toHashCode();
+                .append(motechPatientIdentifierTypeName).append(patientIdentifierTypeNames).append(feedConfig).toHashCode();
     }
 
     private String getBaseApiUrl() {

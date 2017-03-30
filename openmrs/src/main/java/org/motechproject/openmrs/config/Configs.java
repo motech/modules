@@ -59,6 +59,7 @@ public class Configs {
                 config.setPassword(source.getPassword());
                 config.setMotechPatientIdentifierTypeName(source.getMotechPatientIdentifierTypeName());
                 config.setPatientIdentifierTypeNames(source.getPatientIdentifierTypeNames());
+                config.setFeedConfig(source.getFeedConfig());
                 return;
             }
         }

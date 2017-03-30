@@ -30,12 +30,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-
 @Service("atomFeedService")
 public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSAtomFeedServiceImpl.class);
-
     private static final String NEXT_ARCHIVE = "next-archive";
+    private static final String CONFIG_NAME_KEY = "configName";
 
     private OpenMRSConfigService configService;
     private MotechSchedulerService motechSchedulerService;
@@ -43,7 +42,6 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
     private FeedRecordDataService feedRecordDataService;
 
     private EventRelay eventRelay;
-    private Config actualConfig;
 
     @Autowired
     public OpenMRSAtomFeedServiceImpl(FeedRecordDataService feedRecordDataService, EventRelay eventRelay,
@@ -57,22 +55,30 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
     }
 
     @Override
-    public void shouldScheduleFetchJob(Map<String, String> feeds) {
-        for (Map.Entry<String, String> feed : feeds.entrySet()) {
+    public void shouldScheduleFetchJob(Config config) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(CONFIG_NAME_KEY, config.getName());
+
+        for (Map.Entry<String, String> feed : config.getFeedConfig().getAtomFeeds().entrySet()) {
             if (isCronExpression(feed.getKey())) {
-                schedule(feed);
+                schedule(config.getName(), feed);
             }
+        }
+        if (!config.getFeedConfig().isPatientAtomFeed()) {
+            unschedule(EventSubjects.FETCH_PATIENT_MESSAGE, parameters);
+        }
+        if (!config.getFeedConfig().isEncounterAtomFeed()) {
+            unschedule(EventSubjects.FETCH_ENCOUNTER_MESSAGE, parameters);
         }
     }
 
-    private void schedule(Map.Entry<String, String> feed) {
+    private void schedule(String configName, Map.Entry<String, String> feed) {
         String subject = feed.getKey().equals(EventKeys.PATIENT_SCHEDULE_KEY) ? EventSubjects.FETCH_PATIENT_MESSAGE : EventSubjects.FETCH_ENCOUNTER_MESSAGE;
         Map<String, Object> parameters = new HashMap<>();
 
-        parameters.put("configName", actualConfig.getName());
-        if (feed.getValue().isEmpty()) {
-            motechSchedulerService.unscheduleJob(new CronJobId(new MotechEvent(subject, parameters)));
-            LOGGER.info("No patient fetch job cron.");
+        parameters.put(CONFIG_NAME_KEY, configName);
+        if (feed.getValue() == null) {
+            unschedule(subject, parameters);
         } else {
             CronSchedulableJob job = new CronSchedulableJob(new MotechEvent(subject, parameters), feed.getValue());
             motechSchedulerService.safeScheduleJob(job);
@@ -83,42 +89,30 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
     @Override
     @Transactional
     public void fetch(String configName) {
+        Config config = configService.getConfigByName(configName);
 
-        if(!configName.isEmpty()) {
-            actualConfig = configService.getConfigByName(configName);
-        }
-
-        Map<String, String> feeds = actualConfig.getFeedConfig().getAtomFeeds();
+        Map<String, String> feeds = config.getFeedConfig().getAtomFeeds();
         if (feeds.isEmpty()) {
             LOGGER.warn("No feeds to fetch.");
         }
 
         for (Map.Entry<String, String> feed : feeds.entrySet()) {
             String key = feed.getKey();
-            if (isFeedSupported(key)) {
-                fetchAll(feed);
-            } else {
-                LOGGER.error("Feed {} is not supported.", feed.getKey());
+            if (isFeedSupported(config, key)) {
+                fetchAll(config, feed);
             }
         }
-
-        shouldScheduleFetchJob(feeds);
-    }
-
-    @Override
-    public void setActualConfig(Config actualConfig) {
-        this.actualConfig = actualConfig;
     }
 
     private boolean isCronExpression(String key) {
         return key.equals(EventKeys.PATIENT_SCHEDULE_KEY) || key.equals(EventKeys.ENCOUNTER_SCHEDULE_KEY);
     }
 
-    private void fetchAll(Map.Entry<String, String> feed) {
+    private void fetchAll(Config config, Map.Entry<String, String> feed) {
         URL url;
         boolean lastPage = false;
         SyndFeed pageFromFeed = null;
-        String pageUrl = actualConfig.getAtomFeedUrl(feed);
+        String pageUrl = config.getAtomFeedUrl(feed);
         String pageId = feed.getValue();
 
         if (pageId.isEmpty()) {
@@ -159,19 +153,25 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
         return result;
     }
 
-    private boolean isFeedSupported(String key) {
-        boolean result = true;
+    private boolean isFeedSupported(Config config, String key) {
+        boolean result;
 
         switch (key) {
             case EventKeys.ATOM_FEED_ENCOUNTER_PAGE_ID:
+                result = config.getFeedConfig().isEncounterAtomFeed() ? true : false;
                 break;
             case EventKeys.ATOM_FEED_PATIENT_PAGE_ID:
+                result = config.getFeedConfig().isPatientAtomFeed() ? true : false;
                 break;
             default:
                 result = false;
         }
-
         return result;
+    }
+
+    private void unschedule(String subject, Map<String, Object> params) {
+        motechSchedulerService.unscheduleJob(new CronJobId(new MotechEvent(subject, params)));
+        LOGGER.info("No fetch job cron.");
     }
 }
 

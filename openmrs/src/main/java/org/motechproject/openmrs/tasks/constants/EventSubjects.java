@@ -12,9 +12,9 @@ public final class EventSubjects {
 
     public static final String FETCH_PATIENT_MESSAGE = BASE_SUBJECT + "fetch.patient";
     public static final String FETCH_ENCOUNTER_MESSAGE = BASE_SUBJECT + "fetch.encounter";
-    public static final String READ_MESSAGE = BASE_SUBJECT + "read";
     public static final String FEED_CHANGE_MESSAGE = BASE_SUBJECT + "feedchange.";
     public static final String RESCHEDULE_FETCH_JOB = BASE_SUBJECT + "reschedulefetchjob";
+    public static final String SCHEDULE_OR_UNSCHEDULE_FETCH_JOB = BASE_SUBJECT + "schedulefetchjob";
 
     public static final String PATIENT_FEED_CHANGE_MESSAGE = FEED_CHANGE_MESSAGE + "patient";
     public static final String ENCOUNTER_FEED_CHANGE_MESSAGE = FEED_CHANGE_MESSAGE + "encounter";

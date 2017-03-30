@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.motechproject.openmrs.validation.ConfigValidator.validateConfig;
@@ -165,6 +166,12 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(OPEN_MRS_CONFIGS_FILE_NAME, resource);
         eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT));
+
+        for (Config config : configs.getConfigs()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("configName", config.getName());
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.SCHEDULE_OR_UNSCHEDULE_FETCH_JOB, params));
+        }
     }
 
     private void adjustOpenMrsUrl(Config config) {
