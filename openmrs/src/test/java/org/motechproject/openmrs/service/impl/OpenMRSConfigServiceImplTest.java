@@ -10,6 +10,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
+import org.motechproject.openmrs.config.FeedConfig;
 import org.motechproject.openmrs.exception.config.ConfigurationAlreadyExistsException;
 import org.motechproject.openmrs.exception.config.ConfigurationNotFoundException;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
@@ -116,6 +117,7 @@ public class OpenMRSConfigServiceImplTest {
         config.setUsername("fooUsername");
         config.setPassword("fooPassword");
         config.setMotechPatientIdentifierTypeName("fooMotechId");
+        config.setFeedConfig(new FeedConfig());
 
         configService.updateConfig(config);
 
