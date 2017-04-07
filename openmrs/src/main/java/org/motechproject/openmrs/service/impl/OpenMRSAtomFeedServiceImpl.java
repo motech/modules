@@ -134,23 +134,33 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
                 LOGGER.error("Error while fetching {}: {}", pageUrl, e.getMessage());
             }
 
-            pageUrl = getNextPageUrl(pageFromFeed);
+            pageUrl = getNextPageUrl(config, pageFromFeed, feed.getKey());
             lastPage = pageUrl.isEmpty() ? true : false;
         }
     }
 
-    private String getNextPageUrl(SyndFeed page) {
+    private String getNextPageUrl(Config config, SyndFeed page, String feedKey) {
         String result = "";
 
         if (null != page.getLinks() && CollectionUtils.isNotEmpty(page.getLinks())) {
             for (SyndLink link : page.getLinks()) {
                 if (NEXT_ARCHIVE.equals(link.getRel())) {
                     result = link.getHref();
+                    updateCurrentPageId(config, result, feedKey);
                     break;
                 }
             }
         }
         return result;
+    }
+
+    private void updateCurrentPageId(Config config, String href, String feedKey) {
+        String actualPageId = href != null ? href.substring(href.lastIndexOf('/') + 1) : "";
+
+        if (!actualPageId.isEmpty()) {
+            config.getFeedConfig().getAtomFeeds().put(feedKey, actualPageId);
+            configService.updateConfig(config);
+        }
     }
 
     private boolean isFeedSupported(Config config, String key) {
