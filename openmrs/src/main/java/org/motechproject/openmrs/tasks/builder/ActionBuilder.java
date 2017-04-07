@@ -158,6 +158,8 @@ public class ActionBuilder {
 
     private ActionEventRequest buildCreateOrUpdateObservationJSON(String configName) {
         SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
+        SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
+
         int order = 0;
         String serviceMethod = "createOrUpdateObservationJSON";
         String defaultValueForJsonField = "{}";
@@ -172,12 +174,15 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.ORDER_UUID, DisplayNames.ORDER_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.COMMENT, DisplayNames.COMMENT, TEXTAREA, false, order));
 
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.OBSERVATION_UUID, false, 0));
+
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_UPDATE_OBSERVATION_JSON, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(actionParameters)
+                .setPostActionParameters(postActionParameters)
                 .createActionEventRequest();
     }
 
