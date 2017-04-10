@@ -99,7 +99,15 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
 
     private Gson buildGsonWithAdaptersDeserialize() {
         return new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .registerTypeAdapter(Encounter.class, new Encounter.EncounterDeserializer())
+                .create();
+    }
+
+    private Gson buildGsonWithAdaptersDeserializeV112() {
+        return new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .registerTypeAdapter(Observation.class, new Observation.ObservationDeserializer())
                 .create();
     }
 
@@ -108,7 +116,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         if (OPENMRS_V19.equals(config.getOpenMrsVersion())) {
             createdEncounter = buildGsonWithAdaptersDeserialize().fromJson(responseJson, Encounter.class);
         } else {
-            createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+            createdEncounter = buildGsonWithAdaptersDeserializeV112().fromJson(responseJson, Encounter.class);
         }
         return createdEncounter;
     }
