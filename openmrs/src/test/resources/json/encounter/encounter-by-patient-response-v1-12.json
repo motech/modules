@@ -2,7 +2,7 @@
   "results":[
     {
       "uuid":"446d0bec-5e65-4f25-aacd-ee7da78ec616",
-      "encounterDatetime":"2012-06-03T00:00:00.000Z",
+      "encounterDatetime":"2012-06-03T00:00:00.000+0000",
       "patient":{
         "uuid":"71ba40ce-b638-494f-b284-556f0f77955f"
       },

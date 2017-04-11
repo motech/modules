@@ -8,12 +8,15 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -236,6 +239,20 @@ public class Observation {
         }
     }
 
+    public static class ObservationDeserializer implements JsonDeserializer<Observation> {
+        @Override
+        public Observation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return (Observation) JsonUtils.readJsonWithAdapters(json.toString(), Observation.class, getValueAdapter());
+        }
+
+        private Map<Type, Object> getValueAdapter() {
+            Map<Type, Object> valueAdapter = new HashMap<>();
+            valueAdapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeserializer());
+
+            return valueAdapter;
+        }
+    }
+
     /**
      * Represents a single value of the observation.
      */
@@ -312,8 +329,12 @@ public class Observation {
 
             if (json.isJsonObject()) {
                 JsonObject jsonObject = json.getAsJsonObject();
-                observationValue.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
-                observationValue.setUuid(jsonObject.get(UUID_KEY).getAsString());
+                if (jsonObject.has(DISPLAY_KEY)) {
+                    observationValue.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+                }
+                if (jsonObject.has(UUID_KEY)) {
+                    observationValue.setUuid(jsonObject.get(UUID_KEY).getAsString());
+                }
             } else if (json.isJsonPrimitive()) {
                 JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive();
                 observationValue.setDisplay(jsonPrimitive.getAsString());
