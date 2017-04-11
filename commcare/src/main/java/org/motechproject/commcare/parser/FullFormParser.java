@@ -72,8 +72,10 @@ public class FullFormParser {
 
             root.setElementName(FORM);
             root.setValue(FORM_DATA_ELEMENT);
-            addAttributes(root, item.getAttributes());
-            addSubElements(root, item.getChildNodes());
+            if (item != null) {
+                addAttributes(root, item.getAttributes());
+                addSubElements(root, item.getChildNodes());
+            }
         } catch (SAXException | IOException | NullPointerException ex) {
             throw new FullFormParserException(ex, "Exception while trying to parse formXml: " + xmlDoc);
         }
