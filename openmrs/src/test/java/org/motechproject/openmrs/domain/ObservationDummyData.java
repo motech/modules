@@ -19,12 +19,9 @@ public class ObservationDummyData {
         Concept concept = new Concept();
         concept.setUuid(CONCEPT_UUID);
 
-
         Observation observation = new Observation(OBSERVATION_UUID, "TestConcept: 1", concept, new Person(PERSON_UUID),
                 new DateTime(OBSERVATION_DATE_TIME).toDate());
-
         observation.setValue(new Observation.ObservationValue("conceptValueUuid", "conceptValueDisplay"));
-
 
         return observation;
     }
