@@ -1,5 +1,8 @@
 package org.motechproject.openmrs.config;
 
+import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.config.FeedConfig;
+
 import java.util.ArrayList;
 
 /**
@@ -22,6 +25,7 @@ public class ConfigDummyData {
         config.setPassword("password-" + suffix);
         config.setMotechPatientIdentifierTypeName("motech_" + suffix + "_type");
         config.setPatientIdentifierTypeNames(new ArrayList<>());
+        config.setFeedConfig(new FeedConfig());
         return config;
     }
 

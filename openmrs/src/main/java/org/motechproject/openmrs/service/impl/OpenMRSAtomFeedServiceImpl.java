@@ -90,14 +90,15 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
     @Transactional
     public void fetch(String configName) {
         Config config = configService.getConfigByName(configName);
-
         Map<String, String> feeds = config.getFeedConfig().getAtomFeeds();
+
         if (feeds.isEmpty()) {
             LOGGER.warn("No feeds to fetch.");
         }
 
         for (Map.Entry<String, String> feed : feeds.entrySet()) {
             String key = feed.getKey();
+
             if (isFeedSupported(config, key)) {
                 fetchAll(config, feed);
             }
@@ -135,7 +136,7 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
             }
 
             pageUrl = getNextPageUrl(config, pageFromFeed, feed.getKey());
-            lastPage = pageUrl.isEmpty() ? true : false;
+            lastPage = pageUrl.isEmpty();
         }
     }
 
@@ -168,10 +169,10 @@ public class OpenMRSAtomFeedServiceImpl implements OpenMRSAtomFeedService {
 
         switch (key) {
             case EventKeys.ATOM_FEED_ENCOUNTER_PAGE_ID:
-                result = config.getFeedConfig().isEncounterAtomFeed() ? true : false;
+                result = config.getFeedConfig().isEncounterAtomFeed();
                 break;
             case EventKeys.ATOM_FEED_PATIENT_PAGE_ID:
-                result = config.getFeedConfig().isPatientAtomFeed() ? true : false;
+                result = config.getFeedConfig().isPatientAtomFeed();
                 break;
             default:
                 result = false;

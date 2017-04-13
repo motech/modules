@@ -12,7 +12,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
-
 /**
  * FeedCache static helper methods
  */
@@ -20,28 +19,23 @@ public final class FeedCacheUtils {
 
     private FeedCacheUtils() { }
 
-
     public static String feedToString(SyndFeed feed) throws FeedException, UnsupportedEncodingException {
         SyndFeedOutput syndFeedOutput = new SyndFeedOutput();
         return syndFeedOutput.outputString(feed);
     }
-
 
     public static SyndFeed feedFromString(String xml) throws IOException, ClassNotFoundException, FeedException {
         SyndFeedInput syndFeedInput = new SyndFeedInput();
         return syndFeedInput.build(new StringReader(xml));
     }
 
-
     public static FeedRecord recordFromFeed(String url, SyndFeedInfo info) throws IOException, FeedException {
         return new FeedRecord(url, feedToString(info.getSyndFeed()));
     }
 
-
     public static String urlToString(URL url) throws IOException {
         return url.toExternalForm();
     }
-
 
     public static SyndFeedInfo feedRecordToFeedInfo(FeedRecord record) throws IOException, ClassNotFoundException, FeedException {
         SyndFeedInfo info = new SyndFeedInfo();

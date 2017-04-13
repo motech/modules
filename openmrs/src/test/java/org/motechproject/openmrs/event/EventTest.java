@@ -1,6 +1,5 @@
 package org.motechproject.openmrs.event;
 
-import com.rometools.fetcher.FeedFetcher;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
