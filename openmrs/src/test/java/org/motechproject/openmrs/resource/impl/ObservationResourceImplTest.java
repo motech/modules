@@ -120,36 +120,31 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldCreateObservation() throws Exception {
-        String observationJson = prepareObservationJson();
-        ObservationFromJSON observation = prepareObservation();
 
         URI url = config.toInstancePath("/obs");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(getResponseFromFile(OBSERVATION_RESPONSE_JSON));
 
-        Observation created = observationResource.createObservationFromJson(config, observationJson);
+        Observation created = observationResource.createObservationFromJson(config, prepareObservationJson());
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        compareObservations(created, observation);
+        compareObservations(prepareExpectedObservation(), created);
     }
 
     @Test
     public void shouldUpdateObservation() throws Exception {
-        String observationJson = prepareObservationJson();
-        ObservationFromJSON observation = prepareObservation();
-
         URI url = config.toInstancePath("/obs/" + OBSERVATION_UUID);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(getResponseFromFile(OBSERVATION_RESPONSE_JSON));
 
-        Observation updated = observationResource.updateObservation(config, OBSERVATION_UUID, observationJson);
+        Observation updated = observationResource.updateObservation(config, OBSERVATION_UUID, prepareObservationJson());
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        compareObservations(updated, observation);
+        compareObservations(prepareExpectedObservation(), updated);
     }
 
     @Test
@@ -171,11 +166,11 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         return readJsonFromFile(PREPARE_OBSERVATION_JSON);
     }
 
-    private ObservationFromJSON prepareObservation() throws Exception {
+    private ObservationFromJSON prepareExpectedObservation() throws Exception {
         return (ObservationFromJSON) readFromFile(PREPARE_OBSERVATION_JSON, ObservationFromJSON.class);
     }
 
-    private void compareObservations(Observation created, ObservationFromJSON expected) throws Exception {
+    private void compareObservations(ObservationFromJSON expected, Observation created) throws Exception {
         assertEquals(expected.person, created.getPerson().getUuid());
         assertEquals(expected.concept, created.getConcept().getUuid());
         assertEquals(new DateTime(expected.obsDatetime).toDate(), created.getObsDatetime());

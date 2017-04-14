@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * This is the 'brains' of OpenMRS atom feed service. We use the rometools {@link FeedFetcherCache} mechanism to determine if a feed entry content has changed and send a {@link MotechEvent} if it has.
  */
@@ -88,7 +87,6 @@ public class FeedCache implements FeedFetcherCache {
         }
     }
 
-
     /**
      * Removes all items from the cache.
      */
@@ -96,7 +94,6 @@ public class FeedCache implements FeedFetcherCache {
     public void clear() {
         feedRecordDataService.deleteAll();
     }
-
 
     /**
      * Removes the SyndFeedInfo identified by the url from the cache.

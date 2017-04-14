@@ -9,9 +9,7 @@ import java.util.Map;
 public class FeedConfig {
 
     private Map<String, String> atomFeeds;
-
     private boolean patientAtomFeed;
-
     private boolean encounterAtomFeed;
 
     public FeedConfig() {

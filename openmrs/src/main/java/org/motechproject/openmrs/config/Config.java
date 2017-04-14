@@ -17,10 +17,8 @@ import java.util.Map;
 public class Config {
 
     private static final String SERVICE_PATH = "/ws/rest/v1";
-
     private static final String SERVICE_ATOM_FEED_PATH = "/ws/atomfeed/";
-
-    public static final String ATOM_FEED_PATIENT_PAGE_ID = "patientCurrentPageID";
+    private static final String ATOM_FEED_PATIENT_PAGE_ID = "patientCurrentPageID";
 
     private String name;
 
@@ -39,7 +37,11 @@ public class Config {
     private FeedConfig feedConfig;
 
     public Config() {
-        this(null, null, null, null, null, null, new ArrayList<>(), null);
+        this(null, null, null);
+    }
+
+    public Config(String name, String openMrsUrl, FeedConfig feedConfig) {
+        this(name, null, openMrsUrl, null, null, null, new ArrayList<>(), feedConfig);
     }
 
     public Config(String name, String openMrsVersion, String openMrsUrl, String username, String password, String motechPatientIdentifierTypeName, List<String> patientIdentifierTypeNames,
