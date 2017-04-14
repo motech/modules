@@ -15,6 +15,7 @@ import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.resource.ObservationResource;
 import org.motechproject.openmrs.util.JsonUtils;
+import org.motechproject.openmrs.domain.ObservationDummyData;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
@@ -23,6 +24,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -38,8 +40,11 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
     private static final String OBSERVATION_QUERY_RESPONSE_JSON = "json/observation/observation-query-response.json";
 
     private static final String OBSERVATION_RESPONSE_JSON = "json/observation/observation-response.json";
+    private static final String OBSERVATION_WITH_CONCEPT_VALUE_RESPONSE_JSON = "json/observation/observation-with-concept-value-response.json";
     private static final String PREPARE_OBSERVATION_JSON = "json/observation/prepare-observation.json";
     private static final String OBSERVATION_ENCOUNTER_LOOKUP_RESPONSE = "json/observation/observation-encounter-lookup-response.json";
+
+    private static final String OBSERVATION_UUID = "01a4703c-f89f-4316-803b-dc9d08da5a0a0";
 
     @Mock
     private RestOperations restOperations;
@@ -115,34 +120,64 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldCreateObservation() throws Exception {
-        String observationJson = prepareObservationJson();
-        ObservationFromJSON observation = prepareObservation();
 
         URI url = config.toInstancePath("/obs");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(getResponseFromFile(OBSERVATION_RESPONSE_JSON));
 
-        Observation created = observationResource.createObservationFromJson(config, observationJson);
+        Observation created = observationResource.createObservationFromJson(config, prepareObservationJson());
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertThat(created.getPerson().getUuid(), equalTo(observation.person));
-        assertThat(created.getConcept().getUuid(), equalTo(observation.concept));
-        assertThat(created.getObsDatetime(), equalTo(new DateTime(observation.obsDatetime).toDate()));
-        assertThat(Double.parseDouble(created.getValue().getDisplay()), equalTo(Double.parseDouble(observation.value)));
+        compareObservations(prepareExpectedObservation(), created);
+    }
 
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
-                equalTo(readFromFile(PREPARE_OBSERVATION_JSON, JsonObject.class)));
+    @Test
+    public void shouldUpdateObservation() throws Exception {
+        URI url = config.toInstancePath("/obs/" + OBSERVATION_UUID);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(OBSERVATION_RESPONSE_JSON));
+
+        Observation updated = observationResource.updateObservation(config, OBSERVATION_UUID, prepareObservationJson());
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        compareObservations(prepareExpectedObservation(), updated);
+    }
+
+    @Test
+    public void shouldGetObservationWithObjectAsValue() throws Exception {
+        Observation expected = ObservationDummyData.prepareObservationWithConceptValue();
+
+        URI url = config.toInstancePath("/obs/" + OBSERVATION_UUID + "?v=full");
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(OBSERVATION_WITH_CONCEPT_VALUE_RESPONSE_JSON));
+
+        Observation fetched = observationResource.getObservationById(config, OBSERVATION_UUID);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertEquals(expected, fetched);
     }
 
     private String prepareObservationJson() throws Exception {
         return readJsonFromFile(PREPARE_OBSERVATION_JSON);
     }
 
-    private ObservationFromJSON prepareObservation() throws Exception {
+    private ObservationFromJSON prepareExpectedObservation() throws Exception {
         return (ObservationFromJSON) readFromFile(PREPARE_OBSERVATION_JSON, ObservationFromJSON.class);
+    }
+
+    private void compareObservations(ObservationFromJSON expected, Observation created) throws Exception {
+        assertEquals(expected.person, created.getPerson().getUuid());
+        assertEquals(expected.concept, created.getConcept().getUuid());
+        assertEquals(new DateTime(expected.obsDatetime).toDate(), created.getObsDatetime());
+        assertEquals(Double.parseDouble(expected.value), Double.parseDouble(created.getValue().getDisplay()));
+
+        assertEquals(getHeadersForPost(config), requestCaptor.getValue().getHeaders());
+        assertEquals(readFromFile(PREPARE_OBSERVATION_JSON, JsonObject.class), JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class));
     }
 
     private class ObservationFromJSON {
@@ -153,5 +188,4 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         private String value;
         private List<String> groupsMembers;
     }
-
 }

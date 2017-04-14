@@ -46,6 +46,21 @@ public class Observation {
     //Field used in Tasks filter
     private String numberOfObservations;
 
+    public Observation() {
+    }
+
+    public Observation(String display, Concept concept, Person person, Date obsDatetime) {
+        this(null, display, concept, person, obsDatetime);
+    }
+
+    public Observation(String uuid, String display, Concept concept, Person person, Date obsDatetime) {
+        this.uuid = uuid;
+        this.display = display;
+        this.concept = concept;
+        this.person = person;
+        this.obsDatetime = obsDatetime;
+    }
+
     public String getUuid() {
         return uuid;
     }

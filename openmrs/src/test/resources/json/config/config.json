@@ -7,7 +7,12 @@
       "username":"username-fooOne",
       "password":"password-fooOne",
       "motechPatientIdentifierTypeName":"motech_fooOne_type",
-      "patientIdentifierTypeNames": []
+      "patientIdentifierTypeNames": [],
+      "feedConfig": {
+        "atomFeeds": {},
+        "patientAtomFeed": false,
+        "encounterAtomFeed": false
+      }
     }
   ],
   "defaultConfigName":"name-fooOne"

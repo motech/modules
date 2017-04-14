@@ -79,7 +79,6 @@ public interface ObservationResource {
      */
     Observation updateObservation(Config config, String observationUuid, String observation);
 
-
     /**
      * Creates the given observation on the OpenMRS server. The given {@code config} will be used while performing this
      * action.

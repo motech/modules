@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * This is the 'brains' of OpenMRS atom feed service. We use the rometools {@link FeedFetcherCache} mechanism to determine if a feed entry content has changed and send a {@link MotechEvent} if it has.
  */
@@ -88,7 +87,6 @@ public class FeedCache implements FeedFetcherCache {
         }
     }
 
-
     /**
      * Removes all items from the cache.
      */
@@ -96,7 +94,6 @@ public class FeedCache implements FeedFetcherCache {
     public void clear() {
         feedRecordDataService.deleteAll();
     }
-
 
     /**
      * Removes the SyndFeedInfo identified by the url from the cache.
@@ -237,19 +234,19 @@ public class FeedCache implements FeedFetcherCache {
     }
 
     private static boolean areEntriesDifferent(SyndEntry e1, SyndEntry e2) {
-        if (!ObjectUtils.equals(e1.getUpdatedDate(), e2.getUpdatedDate())) {
+        if (ObjectUtils.notEqual(e1.getUpdatedDate(), e2.getUpdatedDate())) {
             LOGGER.trace("different updated date");
             return true;
         }
-        if (!ObjectUtils.equals(e1.getPublishedDate(), e2.getPublishedDate())) {
+        if (ObjectUtils.notEqual(e1.getPublishedDate(), e2.getPublishedDate())) {
             LOGGER.trace("different published date");
             return true;
         }
-        if (!ObjectUtils.equals(e1.getUri(), e2.getUri())) {
+        if (ObjectUtils.notEqual(e1.getUri(), e2.getUri())) {
             LOGGER.trace("different uri");
             return true;
         }
-        if (!ObjectUtils.equals(e1.getContents(), e2.getContents())) {
+        if (ObjectUtils.notEqual(e1.getContents(), e2.getContents())) {
             LOGGER.trace("different contents");
             return true;
         }

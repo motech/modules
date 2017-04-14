@@ -7,7 +7,12 @@
       "username":"username-fooOne",
       "password":"password-fooOne",
       "motechPatientIdentifierTypeName":"motech_fooOne_type",
-      "patientIdentifierTypeNames": []
+      "patientIdentifierTypeNames": [],
+      "feedConfig": {
+        "atomFeeds": {},
+        "patientAtomFeed": false,
+        "encounterAtomFeed": false
+      }
     },
     {
       "name":"name-fooTwo",
@@ -16,7 +21,12 @@
       "username":"username-fooTwo",
       "password":"password-fooTwo",
       "motechPatientIdentifierTypeName":"motech_fooTwo_type",
-      "patientIdentifierTypeNames": []
+      "patientIdentifierTypeNames": [],
+      "feedConfig": {
+        "atomFeeds": {},
+        "patientAtomFeed": false,
+        "encounterAtomFeed": false
+      }
     },
     {
       "name":"name-fooThree",
@@ -25,7 +35,12 @@
       "username":"username-fooThree",
       "password":"password-fooThree",
       "motechPatientIdentifierTypeName":"motech_fooThree_type",
-      "patientIdentifierTypeNames": []
+      "patientIdentifierTypeNames": [],
+      "feedConfig": {
+        "atomFeeds": {},
+        "patientAtomFeed": false,
+        "encounterAtomFeed": false
+      }
     }
   ],
   "defaultConfigName":"name-fooOne"
