@@ -58,9 +58,12 @@ public abstract class BaseResource {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.ALL));
+        LOGGER.debug("{} request body: {}", buildUrl(config, path, params), json);
 
-        String responseJson = exchange(config, buildUrl(config, path, params), HttpMethod.POST, json, headers).getBody();
-        LOGGER.debug("{} request response body: {}", buildUrl(config, path, params), responseJson);
+        ResponseEntity<String> responseEntity = exchange(config, buildUrl(config, path, params), HttpMethod.POST, json, headers);
+        String responseJson = responseEntity.getBody();
+        LOGGER.debug("{} response body with HTTP CODE {}: {}", buildUrl(config, path, params), responseEntity.getStatusCode(), responseJson);
+
         return responseJson;
     }
 
