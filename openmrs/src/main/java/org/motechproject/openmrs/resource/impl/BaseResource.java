@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
@@ -59,10 +60,16 @@ public abstract class BaseResource {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.ALL));
         LOGGER.debug("{} request body: {}", buildUrl(config, path, params), json);
+        String responseJson;
 
-        ResponseEntity<String> responseEntity = exchange(config, buildUrl(config, path, params), HttpMethod.POST, json, headers);
-        String responseJson = responseEntity.getBody();
-        LOGGER.debug("{} response body with HTTP CODE {}: {}", buildUrl(config, path, params), responseEntity.getStatusCode(), responseJson);
+        try {
+            ResponseEntity<String> responseEntity = exchange(config, buildUrl(config, path, params), HttpMethod.POST, json, headers);
+            responseJson = responseEntity.getBody();
+            LOGGER.debug("{} response body with HTTP CODE {}: {}", buildUrl(config, path, params), responseEntity.getStatusCode(), responseJson);
+        } catch(HttpClientErrorException e) {
+            LOGGER.debug("{} {} {}", buildUrl(config, path, params), e.getMessage(), e.getResponseBodyAsString());
+            throw new HttpClientErrorException(e.getStatusCode(), e.getStatusText(), e.getResponseBodyAsByteArray(), null);
+        }
 
         return responseJson;
     }
