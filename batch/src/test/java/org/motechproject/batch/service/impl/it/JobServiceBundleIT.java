@@ -37,7 +37,7 @@ public class JobServiceBundleIT extends BasePaxIT {
 
         BatchJob batchJob = new BatchJob();
         batchJob.setJobName("random-test-job");
-        batchJob.setCronExpression("0 15 10 * * ? 2017");
+        batchJob.setCronExpression("0 15 10 * * ? 2030");
         batchJob.setBatchJobStatusId(1);
 
         batchJobMDSService.create(batchJob);
@@ -45,7 +45,7 @@ public class JobServiceBundleIT extends BasePaxIT {
 
         assertNotNull(batchJobMds);
         assertEquals("random-test-job", batchJobMds.getJobName());
-        assertEquals("0 15 10 * * ? 2017", batchJobMds.getCronExpression());
+        assertEquals("0 15 10 * * ? 2030", batchJobMds.getCronExpression());
         assertEquals((Integer) 1, batchJobMds.getBatchJobStatusId());
     }
 
@@ -56,7 +56,7 @@ public class JobServiceBundleIT extends BasePaxIT {
         paramsMap.put("param_key1", "param_value1");
         paramsMap.put("param_key2", "param_value2");
 
-        params.setCronExpression("0 15 10 * * ? 2017");
+        params.setCronExpression("0 15 10 * * ? 2030");
         params.setJobName("random-test-job");
         params.setParamsMap(paramsMap);
 
@@ -65,7 +65,7 @@ public class JobServiceBundleIT extends BasePaxIT {
         BatchJob batchJobMds = batchJobMDSService.findByJobName("random-test-job");
         assertNotNull(batchJobMds);
         assertEquals("random-test-job", batchJobMds.getJobName());
-        assertEquals("0 15 10 * * ? 2017", batchJobMds.getCronExpression());
+        assertEquals("0 15 10 * * ? 2030", batchJobMds.getCronExpression());
 
         batchJobMDSService.delete(batchJobMds);
 
