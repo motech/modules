@@ -43,7 +43,6 @@ import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
  * Handles both the grid in the cms-lite UI and REST requests for particular resources.
  */
 @Controller
-@PreAuthorize("hasRole('manageCMS')")
 public class ResourceController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
@@ -60,6 +59,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource/available/{field}", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasRole('manageCMS')")
     public Set<String> autocompleteField(@PathVariable String field, @RequestParam String term) throws CMSLiteException {
         Set<String> strings = new TreeSet<>();
 
@@ -95,6 +95,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasRole('manageCMS')")
     public Resources getContents(GridSettings settings) {
         List<Content> contents = cmsLiteService.getAllContents();
         List<ResourceDto> resourceDtos = ResourceFilter.filter(settings, contents);
@@ -110,6 +111,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource/all/languages", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasRole('manageCMS')")
     public Set<String> getAllLanguages() {
         List<Content> contents = cmsLiteService.getAllContents();
         Set<String> strings = new TreeSet<>();
@@ -132,6 +134,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource/{type}/{language}/{name}", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize("hasRole('manageCMS')")
     public Content getContent(@PathVariable String type, @PathVariable String language, @PathVariable String name) throws ContentNotFoundException, CMSLiteException {
         Content content;
 
@@ -158,6 +161,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource/string/{language}/{name}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('manageCMS')")
     public void editStringContent(@PathVariable String language, @PathVariable String name,
                                   @RequestParam String value) throws ContentNotFoundException {
         StringContent stringContent = cmsLiteService.getStringContent(language, name);
@@ -176,6 +180,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource/stream/{language}/{name}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('manageCMS')")
     public void editStreamContent(@PathVariable String language, @PathVariable String name,
                                   @RequestParam MultipartFile file) throws ContentNotFoundException, IOException {
         StreamContent streamContent = cmsLiteService.getStreamContent(language, name);
@@ -199,6 +204,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('manageCMS')")
     public void addContent(@RequestParam String type,
                            @RequestParam String name,
                            @RequestParam String language,
@@ -257,6 +263,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/resource/{type}/{language}/{name}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('manageCMS')")
     public void removeContent(@PathVariable String type, @PathVariable String language, @PathVariable String name) throws ContentNotFoundException, CMSLiteException {
         switch (type) {
             case "stream":
