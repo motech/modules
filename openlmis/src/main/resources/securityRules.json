@@ -1,0 +1,35 @@
+[
+  {
+    "active": true,
+    "pattern": "/**/open-lmis/openlmis-settings/**",
+    "supportedSchemes": [
+      "BASIC"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_OPEN_LMIS",
+    "version": "0.26",
+    "methodsRequired": [
+      "GET",
+      "POST"
+    ],
+    "permissionAccess": ["configureOpenlmis"]
+  },
+  {
+    "active": true,
+    "pattern": "/**/open-lmis/sync/**",
+    "supportedSchemes": [
+      "BASIC"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_OPEN_LMIS",
+    "version": "0.26",
+    "methodsRequired": [
+      "GET"
+    ],
+    "permissionAccess": ["syncOpenlmis"]
+  }
+]

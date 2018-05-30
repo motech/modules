@@ -1,0 +1,34 @@
+<div id="inner-center"
+	class="open-lmis inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+	<div class="header-footer-breadcrumb">
+		<ul class="breadcrumb" role="navigation">
+			<li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+			<li><a role="menu" href="#/settings">{{msg('open-lmis.settings')}}</a></li>
+			<li ng-show="selectedTabState.selectedTab === 'settings'"
+				ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('open-lmis.settings')}}</li>
+		</ul>
+	</div>
+	<div class="header-footer">
+		<ul id="content-tabs" class="nav nav-tabs">
+			<li
+				ng-class="{'active': selectedTabState.selectedTab === 'settings'}"
+				ng-click="selectedTabState.selectedTab = 'settings'"><a
+				href="#/open-lmis/settings">{{msg('open-lmis.settings')}}</a></li>
+		</ul>
+	</div>
+	<div class="ui-layout-content">
+		<div class="tab-content" id="tab-content">
+			<div id="main-content" class="active">
+				<div ng-view></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="inner-east"
+	class="open-lmis inner-east ui-layout-pane ui-layout-pane-east">
+	<div class="header-toolbar header-footer"></div>
+	<div class="ui-layout-content">
+		<div class="inside"></div>
+	</div>
+</div>
