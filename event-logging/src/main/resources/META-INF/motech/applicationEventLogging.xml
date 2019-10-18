@@ -9,6 +9,11 @@
     <context:component-scan base-package="org.motechproject.eventlogging" />
 
     <bean id="eventLoggingSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
+        <property name="configFiles">
+            <list>
+                <value>classpath:event-logging-defaults.properties</value>
+            </list>
+        </property>
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:event-mappings.json</value>

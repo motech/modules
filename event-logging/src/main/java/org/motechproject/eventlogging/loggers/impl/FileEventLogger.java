@@ -4,6 +4,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.eventlogging.converter.impl.DefaultFileToLogConverter;
 import org.motechproject.eventlogging.matchers.LoggableEvent;
 import org.motechproject.eventlogging.loggers.EventLogger;
+import org.motechproject.eventlogging.matchers.MappedLoggableEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,12 @@ public class FileEventLogger extends EventLogger {
         for (LoggableEvent loggableEvent : getLoggableEvents()) {
             if (loggableEvent.isLoggableEvent(eventToLog)) {
                 if (eventConverter != null) {
-                    String logString = eventConverter.convertToLog(eventToLog);
+                    String logString;
+                    if (loggableEvent instanceof MappedLoggableEvent) {
+                        logString = eventConverter.convertToLogMapped(eventToLog, (MappedLoggableEvent) loggableEvent);
+                    } else {
+                        logString = eventConverter.convertToLog(eventToLog);
+                    }
                     log(logString);
                 } else {
                     return;

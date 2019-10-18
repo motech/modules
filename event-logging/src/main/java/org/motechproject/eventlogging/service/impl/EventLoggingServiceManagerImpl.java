@@ -1,15 +1,19 @@
 package org.motechproject.eventlogging.service.impl;
 
+import org.motechproject.config.SettingsFacade;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.annotations.MotechListenerEventProxy;
+import org.motechproject.eventlogging.service.Constants;
 import org.motechproject.eventlogging.service.EventLoggingService;
 import org.motechproject.eventlogging.service.EventLoggingServiceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
@@ -34,12 +38,29 @@ public class EventLoggingServiceManagerImpl implements EventLoggingServiceManage
     @Autowired
     private DbEventLoggingService dbEventLoggingService;
 
+    @Autowired
+    private FileEventLoggingService fileEventLoggingService;
+
+    private SettingsFacade settingsFacade;
+
+    @Autowired
+    public void setSettingsFacade(@Qualifier("eventLoggingSettings") SettingsFacade settingsFacade) {
+        this.settingsFacade = settingsFacade;
+    }
+
     /**
      * Registers default service for event logging, which is DbEventLoggingService
      */
     @PostConstruct
     public void registerDefaultService() {
-        registerEventLoggingService(dbEventLoggingService);
+        if (Boolean.parseBoolean(settingsFacade.getProperty(Constants.DB_ENABLED_PROPERTY))) {
+            registerEventLoggingService(dbEventLoggingService);
+        }
+
+        if (Boolean.parseBoolean(settingsFacade.getProperty(Constants.FILE_ENABLED_PROPERTY))
+                && !StringUtils.isEmpty(settingsFacade.getProperty(Constants.LOGFILE_PATH_PROPERTY))) {
+            registerEventLoggingService(fileEventLoggingService);
+        }
     }
 
     @Override

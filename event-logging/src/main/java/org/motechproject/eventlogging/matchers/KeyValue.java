@@ -1,5 +1,7 @@
 package org.motechproject.eventlogging.matchers;
 
+import java.util.Map;
+
 /**
  * Class representing mapping from one parameter key-value pair to another.
  * Used in {@link org.motechproject.eventlogging.converter.impl.DefaultDbToLogConverter}
@@ -72,4 +74,22 @@ public class KeyValue {
         this.endValue = endValue;
     }
 
+    public static KeyValue buildFromMap(Map<String, String> map) {
+        String startKey = null;
+        String startValue = null;
+        String endKey = null;
+        String endValue = null;
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (startKey == null) {
+                startKey = entry.getKey();
+                startValue = entry.getValue();
+            } else {
+                endKey = entry.getKey();
+                endValue = entry.getValue();
+            }
+        }
+
+        return new KeyValue(startKey, startValue, endKey, endValue, true);
+    }
 }
