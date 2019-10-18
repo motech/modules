@@ -469,14 +469,14 @@
                                 $scope.$parent.configurations.configs.splice($scope.$parent.configurations.configs.indexOf(oldValue), 1);
                                 $scope.$parent.$apply();
                                 $scope.configOutdated = false;
-                                if (newValue === undefined || newValue.name !== "") {
+                                if (!newValue || newValue.name) {
                                     $scope.newConfig = false;
                                 }
                                 $scope.clearMessages();
                             } else if ($scope.configOutdated) {
                                 $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)] = $scope.selectedConfigBackup;
                                 $scope.configOutdated = false;
-                                if (newValue.name === "") {
+                                if (!newValue.name) {
                                     $scope.newConfig = true;
                                 }
                                 $scope.clearMessages();
@@ -486,7 +486,7 @@
                 } else {
                     $scope.rollback = false;
                 }
-            } else if (newValue !== undefined && newValue.name === "") {
+            } else if (newValue && !newValue.name) {
                 $scope.newConfig = true;
                 $scope.oldName = "";
                 $scope.clearMessages();
