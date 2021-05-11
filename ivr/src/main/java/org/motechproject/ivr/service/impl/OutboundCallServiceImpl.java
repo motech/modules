@@ -24,11 +24,13 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
@@ -127,7 +129,13 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             final HttpParams httpParams = new BasicHttpParams();
             HttpConnectionParams.setConnectionTimeout(httpParams, 180000);
             HttpConnectionParams.setSoTimeout(httpParams, 180000);
-            response = new DefaultHttpClient(httpParams).execute(request);
+
+            HttpClient httpClient = new DefaultHttpClient(httpParams);
+            SSLSocketFactory socketFactory = (SSLSocketFactory) httpClient.getConnectionManager()
+                .getSchemeRegistry().get("https").getSchemeSocketFactory();
+            socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+            response = httpClient.execute(request);
         } catch (Exception e) {
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
             statusMessageService.warn(message, MODULE_NAME);
